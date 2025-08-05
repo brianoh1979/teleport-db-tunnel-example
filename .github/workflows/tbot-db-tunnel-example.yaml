@@ -33,7 +33,7 @@ jobs:
         with:
           version: ${{ env.TELEPORT_CLUSTER_VERSION }}
 
-      - name: Start Database Tunnel Bot and Exec Query
+      - name: Start Database Tunnel Bot
         run: |
           cat <<EOF > /tmp/bot-config.yaml
           version: v2
@@ -62,10 +62,6 @@ jobs:
           nohup tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m &
           # Write tbot PID to file
           echo $! > /tmp/tbot.pid
-          echo "Sleeping for 5 Seconds"
-          sleep 5
-          echo "Testing connection..."
-          psql -h 127.0.0.1 -U teleport-db-admin -p 5432 -d transactionsDb -c "SELECT version();"
 
       - name: Exec Database Query
         run:
