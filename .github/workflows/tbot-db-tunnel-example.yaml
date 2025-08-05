@@ -60,6 +60,8 @@ jobs:
           export TELEPORT_ANONYMOUS_TELEMETRY=1 
           # --certificate-ttl might be changed to --credential-ttl
           nohup tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m > /tmp/tbot.log 2>&1 &
+          # Write tbot PID to file
+          echo $! > /tmp/tbot.pid
           echo "Sleeping for 5 Seconds"
           sleep 5
           echo "Testing connection..."
@@ -67,4 +69,10 @@ jobs:
 
       - name: Clean up
         if: always()
-        run: pkill tbot || true && rm -rf /tmp/tbot /tmp/bot-config.yaml
+        run: |
+          if [[ -f /tmp/tbot.pid ]]; then
+            echo "Killing tbot with PID $(cat /tmp/tbot.pid)"
+            kill "$(cat /tmp/tbot.pid)" || true
+            rm -f /tmp/tbot.pid
+          fi
+          rm -rf /tmp/tbot /tmp/bot-config.yaml /tmp/tbot.log
