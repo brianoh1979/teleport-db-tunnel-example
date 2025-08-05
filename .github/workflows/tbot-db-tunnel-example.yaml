@@ -33,7 +33,7 @@ jobs:
         with:
           version: ${{ env.TELEPORT_CLUSTER_VERSION }}
 
-      - name: Start Database Tunnel Bot
+      - name: Start Database Tunnel Bot and Exec Query
         run: |
           cat <<EOF > /tmp/bot-config.yaml
           version: v2
@@ -60,9 +60,6 @@ jobs:
           export TELEPORT_ANONYMOUS_TELEMETRY=1 
           # --certificate-ttl might be changed to --credential-ttl
           tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m &
-
-      - name: Run SQL with psql
-        run: |
           psql -h localhost -U teleport-db-admin -p 5432 -d transactionsDb -c "SELECT version();"
 
       - name: Clean up
