@@ -59,8 +59,11 @@ jobs:
           
           export TELEPORT_ANONYMOUS_TELEMETRY=1 
           # --certificate-ttl might be changed to --credential-ttl
-          tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m &
-          psql -h localhost -U teleport-db-admin -p 5432 -d transactionsDb -c "SELECT version();"
+          nohup tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m > /tmp/tbot.log 2>&1 &
+          echo "Sleeping for 5 Seconds"
+          sleep 5
+          echo "Testing connection..."
+          psql -h 127.0.0.1 -U teleport-db-admin -p 5432 -d transactionsDb -c "SELECT version();"
 
       - name: Clean up
         if: always()
