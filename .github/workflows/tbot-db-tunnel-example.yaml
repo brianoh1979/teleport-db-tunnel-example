@@ -69,7 +69,6 @@ jobs:
 
       - name: Exec Database Query
         run:
-          echo "Testing connection..."
           psql -h 127.0.0.1 -U teleport-db-admin -p 5432 -d transactionsDb -c "SELECT version();"
 
       - name: Clean up
