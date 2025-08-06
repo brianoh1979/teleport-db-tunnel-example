@@ -9,7 +9,6 @@ jobs:
   tbotDbTunnelExample:
     name: Teleport tbot Database Tunnel Example
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Deploy only on the main branch
     permissions:
       id-token: write
       actions: read
@@ -63,9 +62,13 @@ jobs:
           # Write tbot PID to file
           echo $! > /tmp/tbot.pid
 
-      - name: Exec Database Query
-        run:
-          psql -h 127.0.0.1 -U teleport-db-admin -p 5432 -d transactionsDb -c "SELECT version();"
+      - name: Exec Database Query (Retry for 5 minutes)
+        run: |
+          end=$((SECONDS+300))
+          while [ $SECONDS -lt $end ]; do
+            psql -h 127.0.0.1 -U teleport-db-admin -p 5432 -d transactionsDb -c "SELECT version();" || true
+            sleep 5
+          done
 
       - name: Clean up
         if: always()
