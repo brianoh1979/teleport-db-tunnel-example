@@ -47,9 +47,9 @@ jobs:
           services:
             - type: database-tunnel
               listen: tcp://127.0.0.1:5432
-              service: dev-psql-rds
-              database: transactionsDb
-              username: teleport-db-admin
+              service: postgres
+              database: postgres
+              username: postgres
           debug: false
           proxy_server: ${{ secrets.TELEPORT_CLUSTER_DOMAIN }}:443
           oneshot: false
