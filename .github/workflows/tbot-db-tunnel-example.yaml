@@ -12,7 +12,7 @@ jobs:
     permissions:
       id-token: write
       actions: read
-      contents: read  # Access to the repository contents (e.g., checkouts, fetching)
+      contents: read  # Access to the repository contents (e.g., checkouts, fetching etc.)
       pull-requests: write  # If the CD pipeline interacts with PRs
 
     steps:
