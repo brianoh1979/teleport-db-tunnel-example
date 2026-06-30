@@ -46,8 +46,8 @@ jobs:
             acls: "off"
           services:
             - type: database-tunnel
-              listen: tcp://127.0.0.1:5432
-              service: tcp-app
+              listen: tcp://127.0.0.1:54270
+              service: postgres
               database: postgres
               username: postgres
           debug: false
