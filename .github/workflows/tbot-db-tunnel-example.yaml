@@ -64,7 +64,7 @@ jobs:
 
       - name: Exec Database Query (Retry for 5 minutes)
         run: |
-          end=$((SECONDS+5))
+          end=$((SECONDS+15))
           while [ $SECONDS -lt $end ]; do
             psql -h 127.0.0.1 -U postgres -p 5432 -d postgres -c "SELECT version();" || true
             sleep 5
