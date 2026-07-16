@@ -67,16 +67,13 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.PG_PASSWORD }} 
         run: |
-           end=$((SECONDS+15))
-           while [ $SECONDS -lt $end ]; do
-             PGSSLMODE=disable psql \
-               -h 127.0.0.1 \
-               -U ${{ secrets.PG_USERNAME }} \
-               -p 5432 \
-               -d postgres \
-               -c "SELECT version();" && break || true
-             sleep 5
-           done
+          sleep 3
+          PGSSLMODE=disable psql \
+            -h 127.0.0.1 \
+            -U ${{ secrets.PG_USERNAME }} \
+            -p 5432 \
+            -d ${{ secrets.PG_DATABASE }} \
+            -c "SELECT version();"
 
       - name: Clean up
         if: always()
