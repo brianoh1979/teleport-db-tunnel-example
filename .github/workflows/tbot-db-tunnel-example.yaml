@@ -69,7 +69,7 @@ jobs:
         run: |
           end=$((SECONDS+15))
           while [ $SECONDS -lt $end ]; do
-            psql -h 127.0.0.1 -U ${{ secrets.PG_USERNAME }} -p 5432 -d postgres -c "SELECT version();" || true
+            PGSSLMODE=disable psql -h 127.0.0.1 -U ${{ secrets.PG_USERNAME }} -p 5432 -d postgres -c "SELECT version();" || true
             sleep 5
           done
 
