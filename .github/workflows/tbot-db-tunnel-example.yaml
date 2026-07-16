@@ -7,7 +7,7 @@ on:
 
 jobs:
   tbotDbTunnelExample:
-    name: Teleport tbot Database Tunnel Example pipeline
+    name: Teleport tbot Database Tunnel Example
     runs-on: ubuntu-latest
     permissions:
       id-token: write

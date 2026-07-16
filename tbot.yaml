@@ -1,0 +1,13 @@
+version: v2
+proxy_server: "brianohalloran.cloud.gravitational.io:443"
+onboarding:
+  join_method: token           # or a delegated method if running on managed infra
+  token: "k8s-test-bot-token"
+storage:
+  type: memory
+services:
+  - type: identity
+    allow_reissue: true
+    destination:
+      type: directory
+      path: /opt/machine-id
