@@ -63,17 +63,12 @@ jobs:
           sleep 20
           timeout 30 bash -c 'until nc -z 127.0.0.1 5432; do sleep 2; done' && echo "Tunnel ready" || (echo "Tunnel failed to start - tbot log:" && cat /tmp/tbot.log && exit 1)
 
-      - name: Exec Database Query (Retry for 5 minutes)
+      - name: Exec Database Query 
         env:
           PGPASSWORD: ${{ secrets.PG_PASSWORD }} 
         run: |
           sleep 3
-          PGSSLMODE=disable psql \
-            -h 127.0.0.1 \
-            -U ${{ secrets.PG_USERNAME }} \
-            -p 5432 \
-            -d ${{ secrets.PG_DATABASE }} \
-            -c "SELECT version();"
+          PGSSLMODE=disable psql -h 127.0.0.1 -U ${{ secrets.PG_USERNAME }} -p 5432 -d ${{ secrets.PG_DATABASE }} -c "SELECT version();"
 
       - name: Clean up
         if: always()
