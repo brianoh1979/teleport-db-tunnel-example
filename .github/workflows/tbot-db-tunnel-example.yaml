@@ -47,7 +47,7 @@ jobs:
           services:
             - type: application-tunnel
               listen: tcp://127.0.0.1:5432
-              app: tcp-app
+              app_name: tcp-app
           debug: false
           proxy_server: ${{ secrets.TELEPORT_CLUSTER_DOMAIN }}:443
           oneshot: false
@@ -59,6 +59,9 @@ jobs:
           nohup tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m &
           # Write tbot PID to file
           echo $! > /tmp/tbot.pid
+
+          sleep 20
+          timeout 30 bash -c 'until nc -z 127.0.0.1 5432; do sleep 2; done' && echo "Tunnel ready" || (echo "Tunnel failed to start - tbot log:" && cat /tmp/tbot.log && exit 1)
 
       - name: Exec Database Query (Retry for 5 minutes)
         env:
