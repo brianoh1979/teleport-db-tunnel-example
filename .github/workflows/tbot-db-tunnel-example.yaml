@@ -32,7 +32,7 @@ jobs:
         with:
           version: ${{ env.TELEPORT_CLUSTER_VERSION }}
 
-      - name: Start Database Tunnel Bot
+      - name: Start TCP Application Tunnel Bot
         run: |
           cat <<EOF > /tmp/bot-config.yaml
           version: v2
@@ -45,11 +45,9 @@ jobs:
             symlinks: try-secure
             acls: "off"
           services:
-            - type: database-tunnel
+            - type: application-tunnel
               listen: tcp://127.0.0.1:5432
-              service: postgres
-              database: postgres
-              username: postgres
+              app: tcp-app
           debug: false
           proxy_server: ${{ secrets.TELEPORT_CLUSTER_DOMAIN }}:443
           oneshot: false
@@ -63,10 +61,12 @@ jobs:
           echo $! > /tmp/tbot.pid
 
       - name: Exec Database Query (Retry for 5 minutes)
+        env:
+          PGPASSWORD: ${{ secrets.PG_PASSWORD }} 
         run: |
           end=$((SECONDS+15))
           while [ $SECONDS -lt $end ]; do
-            psql -h 127.0.0.1 -U postgres -p 5432 -d postgres -c "SELECT version();" || true
+            psql -h 127.0.0.1 -U ${{ secrets.PG_USERNAME }} -p 5432 -d postgres -c "SELECT version();" || true
             sleep 5
           done
 
