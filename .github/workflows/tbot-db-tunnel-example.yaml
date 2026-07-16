@@ -59,6 +59,8 @@ jobs:
           nohup tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m &
           # Write tbot PID to file
           echo $! > /tmp/tbot.pid
+          tsh apps login tcp-app -i /tmp/tbot/identity --proxy ${{ secrets.TELEPORT_CLUSTER_DOMAIN }}:443
+          tsh proxy app tcp-app --port 5432 -i /tmp/tbot/identity --proxy ${{ secrets.TELEPORT_CLUSTER_DOMAIN }}:443
 
       - name: Exec Database Query (Retry for 5 minutes)
         env:
