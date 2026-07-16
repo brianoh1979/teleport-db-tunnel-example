@@ -56,7 +56,7 @@ jobs:
           
           export TELEPORT_ANONYMOUS_TELEMETRY=1 
           # --certificate-ttl might be changed to --credential-ttl
-          nohup tbot start -c /tmp/bot-config.yaml  --certificate-ttl 10m --renewal-interval 5m &
+          nohup tbot start -c /tmp/bot-config.yaml --certificate-ttl 10m --renewal-interval 5m --insecure > /tmp/tbot.log 2>&1 &
           # Write tbot PID to file
           echo $! > /tmp/tbot.pid
 
